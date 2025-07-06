@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useReducer, ReactNode } from 'react';
 
 export interface Product {
@@ -7,7 +6,7 @@ export interface Product {
   price: number;
   originalPrice?: number;
   image: string;
-  category: 'men' | 'women' | 'couples';
+  category: 'men' | 'women' | 'couples' | 'students';
   type: string;
   description: string;
   variants: {
@@ -157,6 +156,59 @@ const initialProducts: Product[] = [
     isTrending: true,
     rating: 4.9,
     reviews: 67
+  },
+  {
+    id: '7',
+    name: 'Student Backpack Set',
+    price: 59.99,
+    originalPrice: 79.99,
+    image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500',
+    category: 'students',
+    type: 'Accessories',
+    description: 'Complete backpack set perfect for students with laptop compartment and organizers.',
+    variants: {
+      sizes: ['One Size'],
+      colors: ['Black', 'Navy', 'Gray', 'Burgundy']
+    },
+    isLiked: false,
+    isTrending: true,
+    rating: 4.4,
+    reviews: 167
+  },
+  {
+    id: '8',
+    name: 'Campus Casual Hoodie',
+    price: 45.99,
+    image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500',
+    category: 'students',
+    type: 'Hoodies',
+    description: 'Comfortable and stylish hoodie perfect for campus life and study sessions.',
+    variants: {
+      sizes: ['XS', 'S', 'M', 'L', 'XL'],
+      colors: ['Heather Gray', 'Navy', 'Forest Green', 'Maroon']
+    },
+    isLiked: false,
+    isTrending: false,
+    rating: 4.2,
+    reviews: 89
+  },
+  {
+    id: '9',
+    name: 'Study Buddy T-Shirt Pack',
+    price: 39.99,
+    originalPrice: 55.99,
+    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500',
+    category: 'students',
+    type: 'T-Shirts',
+    description: 'Pack of 3 comfortable t-shirts designed for long study sessions and campus activities.',
+    variants: {
+      sizes: ['XS', 'S', 'M', 'L', 'XL'],
+      colors: ['Multi-Pack A', 'Multi-Pack B', 'Multi-Pack C']
+    },
+    isLiked: false,
+    isTrending: true,
+    rating: 4.6,
+    reviews: 234
   }
 ];
 

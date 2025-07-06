@@ -1,9 +1,9 @@
-
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Heart, ShoppingCart, ArrowLeft } from 'lucide-react';
+import { Heart, ShoppingCart, ArrowLeft, Star } from 'lucide-react';
 import { useEcommerce } from '../contexts/EcommerceContext';
 import { useToast } from '../hooks/use-toast';
+import ProductCarousel from '../components/ProductCarousel';
 
 const ProductDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -15,6 +15,14 @@ const ProductDetailPage = () => {
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
   const [quantity, setQuantity] = useState(1);
+
+  // Get alternate products (same category, excluding current product)
+  const alternateProducts = state.products.filter(p => 
+    p.category === product?.category && p.id !== product?.id
+  ).slice(0, 8);
+
+  // Get trending products for carousel
+  const trendingProducts = state.products.filter(p => p.isTrending && p.id !== product?.id).slice(0, 8);
 
   if (!product) {
     return (
@@ -132,12 +140,12 @@ const ProductDetailPage = () => {
                 <div className="flex items-center">
                   <div className="flex text-yellow-400">
                     {[...Array(5)].map((_, i) => (
-                      <span key={i} className={i < Math.floor(product.rating) ? 'text-yellow-400' : 'text-gray-300'}>
-                        ★
-                      </span>
+                      <Star key={i} className={`h-5 w-5 ${i < Math.floor(product.rating) ? 'fill-current text-yellow-400' : 'text-gray-300'}`} />
                     ))}
                   </div>
-                  <span className="text-sm text-gray-500 ml-2">({product.reviews} reviews)</span>
+                  <span className="text-sm text-gray-600 ml-2">
+                    {product.rating} ({product.reviews} reviews)
+                  </span>
                 </div>
                 <span className="text-sm text-gray-500">|</span>
                 <span className="text-sm text-green-600 font-medium">In Stock</span>
@@ -228,13 +236,30 @@ const ProductDetailPage = () => {
             <div className="space-y-4">
               <div className="flex space-x-4">
                 <button
-                  onClick={handleBuyNow}
+                  onClick={() => navigate('/checkout')}
                   className="flex-1 bg-black text-white py-3 px-6 rounded-md font-medium hover:bg-gray-800 transition-colors"
                 >
                   Buy Now
                 </button>
                 <button
-                  onClick={handleAddToCart}
+                  onClick={() => {
+                    if (!selectedSize || !selectedColor) {
+                      toast({
+                        title: "Please select options",
+                        description: "Please select both size and color before adding to cart.",
+                        variant: "destructive",
+                      });
+                      return;
+                    }
+                    dispatch({
+                      type: 'ADD_TO_CART',
+                      payload: { product, size: selectedSize, color: selectedColor, quantity }
+                    });
+                    toast({
+                      title: "Added to Cart",
+                      description: `${product.name} has been added to your cart.`,
+                    });
+                  }}
                   className="flex-1 bg-white text-black py-3 px-6 rounded-md font-medium border border-black hover:bg-gray-50 transition-colors flex items-center justify-center"
                 >
                   <ShoppingCart className="h-4 w-4 mr-2" />
@@ -244,7 +269,23 @@ const ProductDetailPage = () => {
               
               <div className="flex space-x-4">
                 <button
-                  onClick={handleAddToWishlist}
+                  onClick={() => {
+                    if (!product.isLiked) {
+                      dispatch({ type: 'TOGGLE_LIKE', payload: product.id });
+                      dispatch({ type: 'ADD_TO_WISHLIST', payload: product });
+                      toast({
+                        title: "Added to Wishlist",
+                        description: `${product.name} has been added to your wishlist.`,
+                      });
+                    } else {
+                      dispatch({ type: 'TOGGLE_LIKE', payload: product.id });
+                      dispatch({ type: 'REMOVE_FROM_WISHLIST', payload: product.id });
+                      toast({
+                        title: "Removed from Wishlist",
+                        description: `${product.name} has been removed from your wishlist.`,
+                      });
+                    }
+                  }}
                   className={`flex-1 py-3 px-6 rounded-md font-medium border transition-colors flex items-center justify-center ${
                     product.isLiked
                       ? 'bg-red-50 text-red-600 border-red-200'
@@ -256,7 +297,12 @@ const ProductDetailPage = () => {
                 </button>
                 
                 <button
-                  onClick={handleTryOn}
+                  onClick={() => {
+                    toast({
+                      title: "Try On Feature",
+                      description: "Virtual try-on feature coming soon!",
+                    });
+                  }}
                   className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-md font-medium hover:bg-blue-700 transition-colors"
                 >
                   Try On (AR)
@@ -277,6 +323,43 @@ const ProductDetailPage = () => {
             </div>
           </div>
         </div>
+
+        {/* Customer Reviews Section */}
+        <div className="mt-16">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Customer Reviews</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3].map((review) => (
+              <div key={review} className="bg-white rounded-lg shadow-sm p-6">
+                <div className="flex items-center mb-3">
+                  <div className="flex text-yellow-400">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-4 w-4 fill-current" />
+                    ))}
+                  </div>
+                  <span className="ml-2 text-sm text-gray-600">5.0</span>
+                </div>
+                <p className="text-gray-600 text-sm mb-3">
+                  "Amazing quality and perfect fit! Really happy with this purchase and would definitely recommend."
+                </p>
+                <p className="text-sm font-medium text-gray-900">Customer {review}</p>
+                <p className="text-xs text-gray-500">Verified Purchase</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Trending Products Carousel */}
+        {trendingProducts.length > 0 && (
+          <ProductCarousel products={trendingProducts} title="Trending Products" />
+        )}
+
+        {/* Alternate Products */}
+        {alternateProducts.length > 0 && (
+          <ProductCarousel 
+            products={alternateProducts} 
+            title={`More from ${product.category === 'men' ? 'Men\'s' : product.category === 'women' ? 'Women\'s' : product.category === 'couples' ? 'Couple\'s' : 'Student\'s'} Collection`} 
+          />
+        )}
       </div>
     </div>
   );

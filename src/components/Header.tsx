@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, ShoppingCart, Heart, User } from 'lucide-react';
+import { Search, ShoppingCart, Heart, User, Settings } from 'lucide-react';
 import { useEcommerce } from '../contexts/EcommerceContext';
 
 const Header = () => {
@@ -34,6 +34,9 @@ const Header = () => {
             </Link>
             <Link to="/products?category=couples" className="text-gray-700 hover:text-black transition-colors font-medium">
               Couples
+            </Link>
+            <Link to="/products?category=students" className="text-gray-700 hover:text-black transition-colors font-medium">
+              Students
             </Link>
             <Link to="/trending" className="text-gray-700 hover:text-black transition-colors font-medium">
               Trending
@@ -74,6 +77,10 @@ const Header = () => {
               )}
             </Link>
             
+            <Link to="/admin" className="p-2 text-gray-700 hover:text-black transition-colors">
+              <Settings className="h-6 w-6" />
+            </Link>
+            
             <button className="p-2 text-gray-700 hover:text-black transition-colors">
               <User className="h-6 w-6" />
             </button>
@@ -83,7 +90,7 @@ const Header = () => {
 
       {/* Mobile Navigation */}
       <div className="md:hidden border-t bg-white">
-        <div className="px-4 py-3 flex justify-center space-x-8">
+        <div className="px-4 py-3 flex justify-center space-x-6">
           <Link to="/products?category=men" className="text-sm font-medium text-gray-700 hover:text-black">
             Men
           </Link>
@@ -92,6 +99,9 @@ const Header = () => {
           </Link>
           <Link to="/products?category=couples" className="text-sm font-medium text-gray-700 hover:text-black">
             Couples
+          </Link>
+          <Link to="/products?category=students" className="text-sm font-medium text-gray-700 hover:text-black">
+            Students
           </Link>
           <Link to="/trending" className="text-sm font-medium text-gray-700 hover:text-black">
             Trending
