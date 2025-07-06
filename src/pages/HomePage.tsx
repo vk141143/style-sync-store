@@ -24,6 +24,11 @@ const HomePage = () => {
       name: 'Couple\'s Collection',
       image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800',
       link: '/products?category=couples'
+    },
+    {
+      name: 'Students Collection',
+      image: 'https://images.unsplash.com/photo-1523050854058-8df90110c9d1?w=800',
+      link: '/products?category=students'
     }
   ];
 
@@ -44,7 +49,7 @@ const HomePage = () => {
                 Style Your Story
               </h1>
               <p className="text-xl md:text-2xl mb-8 text-gray-200">
-                Discover the latest trends in fashion for men, women, and couples
+                Discover the latest trends in fashion for men, women, couples, and students
               </p>
               <Link
                 to="/products"
@@ -62,7 +67,7 @@ const HomePage = () => {
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center mb-12">Shop by Category</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {featuredCategories.map((category, index) => (
               <Link
                 key={index}

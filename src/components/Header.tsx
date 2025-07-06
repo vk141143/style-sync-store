@@ -38,22 +38,6 @@ const Header = () => {
             </form>
           </div>
 
-          {/* Categories */}
-          <div className="hidden md:flex items-center space-x-6 mr-8">
-            <Link to="/products?category=men" className="text-gray-700 hover:text-black transition-colors font-medium">
-              Men
-            </Link>
-            <Link to="/products?category=women" className="text-gray-700 hover:text-black transition-colors font-medium">
-              Women
-            </Link>
-            <Link to="/products?category=couples" className="text-gray-700 hover:text-black transition-colors font-medium">
-              Couples
-            </Link>
-            <Link to="/products?category=students" className="text-gray-700 hover:text-black transition-colors font-medium">
-              Students
-            </Link>
-          </div>
-
           {/* Action Icons */}
           <div className="flex items-center space-x-4">
             <Link to="/wishlist" className="relative p-2 text-gray-700 hover:text-black transition-colors">
@@ -82,24 +66,6 @@ const Header = () => {
               <User className="h-6 w-6" />
             </button>
           </div>
-        </div>
-      </div>
-
-      {/* Mobile Categories */}
-      <div className="md:hidden border-t bg-white">
-        <div className="px-4 py-3 flex justify-center space-x-6">
-          <Link to="/products?category=men" className="text-sm font-medium text-gray-700 hover:text-black">
-            Men
-          </Link>
-          <Link to="/products?category=women" className="text-sm font-medium text-gray-700 hover:text-black">
-            Women
-          </Link>
-          <Link to="/products?category=couples" className="text-sm font-medium text-gray-700 hover:text-black">
-            Couples
-          </Link>
-          <Link to="/products?category=students" className="text-sm font-medium text-gray-700 hover:text-black">
-            Students
-          </Link>
         </div>
       </div>
     </header>

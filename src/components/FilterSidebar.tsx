@@ -5,19 +5,8 @@ import { useEcommerce } from '../contexts/EcommerceContext';
 const FilterSidebar = () => {
   const { state, dispatch } = useEcommerce();
 
-  const categories = [
-    { id: 'all', name: 'All Categories' },
-    { id: 'men', name: 'Men' },
-    { id: 'women', name: 'Women' },
-    { id: 'couples', name: 'Couples' }
-  ];
-
   const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
   const colors = ['Black', 'White', 'Gray', 'Navy', 'Beige', 'Pink', 'Blue', 'Red'];
-
-  const handleCategoryChange = (category: string) => {
-    dispatch({ type: 'SET_CATEGORY', payload: category });
-  };
 
   const handleSizeToggle = (size: string) => {
     const currentSizes = state.selectedFilters.sizes;
@@ -44,26 +33,6 @@ const FilterSidebar = () => {
   return (
     <div className="w-64 bg-white p-6 border-r">
       <h2 className="text-lg font-semibold mb-6">Filters</h2>
-      
-      {/* Categories */}
-      <div className="mb-6">
-        <h3 className="font-medium mb-3">Categories</h3>
-        <div className="space-y-2">
-          {categories.map((category) => (
-            <label key={category.id} className="flex items-center">
-              <input
-                type="radio"
-                name="category"
-                value={category.id}
-                checked={state.selectedCategory === category.id}
-                onChange={() => handleCategoryChange(category.id)}
-                className="mr-2"
-              />
-              <span className="text-sm">{category.name}</span>
-            </label>
-          ))}
-        </div>
-      </div>
 
       {/* Price Range */}
       <div className="mb-6">
@@ -151,7 +120,6 @@ const FilterSidebar = () => {
       {/* Clear Filters */}
       <button
         onClick={() => {
-          dispatch({ type: 'SET_CATEGORY', payload: 'all' });
           dispatch({ type: 'SET_FILTERS', payload: { priceRange: [0, 300], sizes: [], colors: [] } });
         }}
         className="w-full py-2 px-4 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
