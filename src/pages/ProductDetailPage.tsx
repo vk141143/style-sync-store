@@ -4,6 +4,7 @@ import { Heart, ShoppingCart, ArrowLeft, Star } from 'lucide-react';
 import { useEcommerce } from '../contexts/EcommerceContext';
 import { useToast } from '../hooks/use-toast';
 import ProductCarousel from '../components/ProductCarousel';
+import ARTryOn from '../components/ARTryOn';
 
 const ProductDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -15,6 +16,8 @@ const ProductDetailPage = () => {
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
   const [quantity, setQuantity] = useState(1);
+  const [showARTryOn, setShowARTryOn] = useState(false);
+  const [currentProductImage, setCurrentProductImage] = useState(product?.image || '');
 
   // Get alternate products (same category, excluding current product)
   const alternateProducts = state.products.filter(p => 
@@ -23,6 +26,14 @@ const ProductDetailPage = () => {
 
   // Get trending products for carousel
   const trendingProducts = state.products.filter(p => p.isTrending && p.id !== product?.id).slice(0, 8);
+
+  // Color variants - in a real app, this would come from the product data
+  const colorVariants = {
+    'Black': product?.image || '',
+    'White': product?.image || '',
+    'Blue': product?.image || '',
+    'Red': product?.image || '',
+  };
 
   if (!product) {
     return (
@@ -39,6 +50,39 @@ const ProductDetailPage = () => {
       </div>
     );
   }
+
+  const handleColorChange = (color: string) => {
+    setSelectedColor(color);
+    // Update product image based on color selection
+    if (colorVariants[color as keyof typeof colorVariants]) {
+      setCurrentProductImage(colorVariants[color as keyof typeof colorVariants]);
+    }
+  };
+
+  const handleBuyNow = () => {
+    if (!selectedSize || !selectedColor) {
+      toast({
+        title: "Please select options",
+        description: "Please select both size and color before purchasing.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Add to cart first
+    dispatch({
+      type: 'ADD_TO_CART',
+      payload: {
+        product,
+        size: selectedSize,
+        color: selectedColor,
+        quantity
+      }
+    });
+    
+    // Navigate to checkout
+    navigate('/checkout');
+  };
 
   const handleAddToCart = () => {
     if (!selectedSize || !selectedColor) {
@@ -91,23 +135,6 @@ const ProductDetailPage = () => {
     });
   };
 
-  const handleBuyNow = () => {
-    if (!selectedSize || !selectedColor) {
-      toast({
-        title: "Please select options",
-        description: "Please select both size and color before purchasing.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    // Add to cart first
-    handleAddToCart();
-    
-    // Navigate to cart
-    navigate('/cart');
-  };
-
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -125,7 +152,7 @@ const ProductDetailPage = () => {
           <div className="space-y-4">
             <div className="aspect-w-1 aspect-h-1 bg-white rounded-lg overflow-hidden shadow-sm">
               <img
-                src={product.image}
+                src={currentProductImage}
                 alt={product.name}
                 className="w-full h-96 lg:h-[500px] object-cover"
               />
@@ -170,6 +197,26 @@ const ProductDetailPage = () => {
               <p className="text-gray-600 leading-relaxed">{product.description}</p>
             </div>
 
+            {/* Color Selection with Visual Feedback */}
+            <div>
+              <h3 className="text-sm font-medium text-gray-900 mb-3">Color</h3>
+              <div className="flex flex-wrap gap-2">
+                {product.variants.colors.map((color) => (
+                  <button
+                    key={color}
+                    onClick={() => handleColorChange(color)}
+                    className={`py-2 px-4 text-sm font-medium rounded-md border transition-colors ${
+                      selectedColor === color
+                        ? 'bg-black text-white border-black'
+                        : 'bg-white text-gray-900 border-gray-300 hover:border-gray-400'
+                    }`}
+                  >
+                    {color}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Size Selection */}
             <div>
               <h3 className="text-sm font-medium text-gray-900 mb-3">Size</h3>
@@ -185,26 +232,6 @@ const ProductDetailPage = () => {
                     }`}
                   >
                     {size}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Color Selection */}
-            <div>
-              <h3 className="text-sm font-medium text-gray-900 mb-3">Color</h3>
-              <div className="flex flex-wrap gap-2">
-                {product.variants.colors.map((color) => (
-                  <button
-                    key={color}
-                    onClick={() => setSelectedColor(color)}
-                    className={`py-2 px-4 text-sm font-medium rounded-md border transition-colors ${
-                      selectedColor === color
-                        ? 'bg-black text-white border-black'
-                        : 'bg-white text-gray-900 border-gray-300 hover:border-gray-400'
-                    }`}
-                  >
-                    {color}
                   </button>
                 ))}
               </div>
@@ -236,7 +263,7 @@ const ProductDetailPage = () => {
             <div className="space-y-4">
               <div className="flex space-x-4">
                 <button
-                  onClick={() => navigate('/checkout')}
+                  onClick={handleBuyNow}
                   className="flex-1 bg-black text-white py-3 px-6 rounded-md font-medium hover:bg-gray-800 transition-colors"
                 >
                   Buy Now
@@ -297,12 +324,7 @@ const ProductDetailPage = () => {
                 </button>
                 
                 <button
-                  onClick={() => {
-                    toast({
-                      title: "Try On Feature",
-                      description: "Virtual try-on feature coming soon!",
-                    });
-                  }}
+                  onClick={() => setShowARTryOn(true)}
                   className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-md font-medium hover:bg-blue-700 transition-colors"
                 >
                   Try On (AR)
@@ -361,6 +383,14 @@ const ProductDetailPage = () => {
           />
         )}
       </div>
+
+      {/* AR Try-On Modal */}
+      <ARTryOn
+        isOpen={showARTryOn}
+        onClose={() => setShowARTryOn(false)}
+        productName={product.name}
+        productImage={currentProductImage}
+      />
     </div>
   );
 };

@@ -24,25 +24,6 @@ const Header = () => {
             StyleCo
           </Link>
 
-          {/* Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            <Link to="/products?category=men" className="text-gray-700 hover:text-black transition-colors font-medium">
-              Men
-            </Link>
-            <Link to="/products?category=women" className="text-gray-700 hover:text-black transition-colors font-medium">
-              Women
-            </Link>
-            <Link to="/products?category=couples" className="text-gray-700 hover:text-black transition-colors font-medium">
-              Couples
-            </Link>
-            <Link to="/products?category=students" className="text-gray-700 hover:text-black transition-colors font-medium">
-              Students
-            </Link>
-            <Link to="/trending" className="text-gray-700 hover:text-black transition-colors font-medium">
-              Trending
-            </Link>
-          </nav>
-
           {/* Search Bar */}
           <div className="flex-1 max-w-lg mx-8">
             <form onSubmit={handleSearchSubmit} className="relative">
@@ -55,6 +36,22 @@ const Header = () => {
               />
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
             </form>
+          </div>
+
+          {/* Categories */}
+          <div className="hidden md:flex items-center space-x-6 mr-8">
+            <Link to="/products?category=men" className="text-gray-700 hover:text-black transition-colors font-medium">
+              Men
+            </Link>
+            <Link to="/products?category=women" className="text-gray-700 hover:text-black transition-colors font-medium">
+              Women
+            </Link>
+            <Link to="/products?category=couples" className="text-gray-700 hover:text-black transition-colors font-medium">
+              Couples
+            </Link>
+            <Link to="/products?category=students" className="text-gray-700 hover:text-black transition-colors font-medium">
+              Students
+            </Link>
           </div>
 
           {/* Action Icons */}
@@ -77,7 +74,7 @@ const Header = () => {
               )}
             </Link>
             
-            <Link to="/admin" className="p-2 text-gray-700 hover:text-black transition-colors">
+            <Link to="/admin-login" className="p-2 text-gray-700 hover:text-black transition-colors">
               <Settings className="h-6 w-6" />
             </Link>
             
@@ -88,7 +85,7 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobile Navigation */}
+      {/* Mobile Categories */}
       <div className="md:hidden border-t bg-white">
         <div className="px-4 py-3 flex justify-center space-x-6">
           <Link to="/products?category=men" className="text-sm font-medium text-gray-700 hover:text-black">
@@ -102,9 +99,6 @@ const Header = () => {
           </Link>
           <Link to="/products?category=students" className="text-sm font-medium text-gray-700 hover:text-black">
             Students
-          </Link>
-          <Link to="/trending" className="text-sm font-medium text-gray-700 hover:text-black">
-            Trending
           </Link>
         </div>
       </div>

@@ -14,6 +14,7 @@ import WishlistPage from "./pages/WishlistPage";
 import TrendingPage from "./pages/TrendingPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import AdminPage from "./pages/AdminPage";
+import AdminLoginPage from "./pages/AdminLoginPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,6 +37,7 @@ const App = () => (
               <Route path="/trending" element={<TrendingPage />} />
               <Route path="/checkout" element={<CheckoutPage />} />
               <Route path="/admin" element={<AdminPage />} />
+              <Route path="/admin-login" element={<AdminLoginPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>
